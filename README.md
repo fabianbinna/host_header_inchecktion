@@ -21,13 +21,13 @@ This extension is not automatic. Every action must be started by yourself:
 6. Go to Logger.
 7. In case of canary payload, check issue activity.
 
-# Installation
+## Installation
 
 1. Download the pre-built jar from the relases page.
 2. Extender -> Add -> Extension Details -> Select file ...
 3. Select the downloaded jar.
 
-# Build
+## Build
 
 Linux: `./gradlew clean build -x test`
 
