@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'net.portswigger.burp.extender:burp-extender-api:2.3'
+    testImplementation files('/home/kali/BurpSuitePro/burpsuite_pro.jar')
+}
+
+test {
+    useJUnitPlatform()
+}
+
+compileJava {
+    targetCompatibility '15'
+    sourceCompatibility '15'
+}
