@@ -20,3 +20,11 @@ This extensio is not automatic. Every action must be started by yourself:
 5. OK.
 6. Go to Logger.
 7. In case of canary payload, check issue activity.
+
+# Build
+
+Linux: `./gradlew clean build -x test`
+
+Windows: `.\gradlew.bat clean build -x test`
+
+Get the jar from `build/libs/host_header_inchecktion.jar`
