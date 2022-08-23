@@ -14,7 +14,7 @@ import static burp.HostHeaderAttackConfig.AttackType.CANARY;
 
 class HostHeaderAttackConfigDialog {
 
-    private static final String DEFAULT_HOST = "www.example.com";
+    private static final String DEFAULT_HOST = "localhost";
 
     private final JPanel dialogPanel;
     private final JComboBox<AttackType> payloadTypeComboBox = new JComboBox<>(AttackType.values());

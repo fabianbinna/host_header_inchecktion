@@ -14,6 +14,7 @@ import static burp.HostHeaderUtils.addCacheBuster;
 class HostHeaderAttackExecutor {
 
     private static final Executor executor = Executors.newSingleThreadExecutor();
+    private static final HostHeaderAttackConfigDialog hostHeaderAttackConfigDialog = new HostHeaderAttackConfigDialog();
 
     private final IBurpExtenderCallbacks callbacks;
     private final IExtensionHelpers helpers;
@@ -24,7 +25,6 @@ class HostHeaderAttackExecutor {
     }
 
     void execute(IHttpRequestResponse[] originalMessages) {
-        HostHeaderAttackConfigDialog hostHeaderAttackConfigDialog = new HostHeaderAttackConfigDialog();
         int selectedOption = hostHeaderAttackConfigDialog.showDialog();
         if(selectedOption != JOptionPane.OK_OPTION) {
             return;
