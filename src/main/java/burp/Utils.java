@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public enum HostHeaderUtils {
+public enum Utils {
     ;
 
     static List<String> rewriteUrl(List<String> headers, BiFunction<String, String, String> rewrite) {
@@ -62,11 +62,27 @@ public enum HostHeaderUtils {
     }
 
     static List<String> addCacheBuster(List<String> headers) {
-        return HostHeaderUtils.rewriteUrl(headers, (url, hostHeader) -> {
+        return Utils.rewriteUrl(headers, (url, hostHeader) -> {
             var urlParts = url.split("\s");
             String cacheBuster = (urlParts[1].contains("?") ? "&" : "?") + "cb=" + UUID.randomUUID();
             return String.format("%s\s%s\s%s", urlParts[0], urlParts[1] + cacheBuster, urlParts[2]);
         });
+    }
+
+    static List<int[]> getMatches(byte[] response, byte[] match, IExtensionHelpers helpers) {
+        List<int[]> matches = new ArrayList<>();
+
+        int start = 0;
+        while (start < response.length) {
+            start = helpers.indexOf(response, match, true, start, response.length);
+            if (start == -1) {
+                break;
+            }
+            matches.add(new int[] { start, start + match.length });
+            start += match.length;
+        }
+
+        return matches;
     }
 
 }

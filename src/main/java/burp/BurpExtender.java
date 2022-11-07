@@ -9,10 +9,14 @@ public class BurpExtender implements IBurpExtender {
         callbacks.setExtensionName("Host Header Inchecktion");
         var stdout = new PrintWriter(callbacks.getStdout(), true);
 
-        var menu = new HostHeaderInchecktionMenu(new HostHeaderAttackExecutor(callbacks));
+        var attacker = new HostHeaderInjectionAttacker(callbacks);
+        var scanner = new HostHeaderInjectionScanner(callbacks,  attacker);
+        callbacks.registerScannerCheck(scanner);
+
+        var menu = new ManualAttackMenu(callbacks, attacker);
         callbacks.registerContextMenuFactory(menu);
 
-        stdout.println("Host Header Inchecktion loaded.");
+        stdout.println("Host Header Inchecktion v1.2 loaded.");
     }
 
 }

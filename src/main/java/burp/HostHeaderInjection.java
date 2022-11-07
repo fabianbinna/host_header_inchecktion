@@ -3,75 +3,75 @@ package burp;
 import java.util.List;
 import java.util.function.BiFunction;
 
-import static burp.HostHeaderUtils.*;
+import static burp.Utils.*;
 
-enum HostHeaderAttack {
+enum HostHeaderInjection {
 
     ARBITRARY("Arbitrary Host Header",
-            HostHeaderAttack::generateArbitraryHostHeader,
+            HostHeaderInjection::generateArbitraryHostHeader,
             "Host: [PAYLOAD]"),
 
     DUPLICATE_AFTER_HOST("Duplicate Host Header After Host Header",
-            HostHeaderAttack::generateDuplicatedHostHeaderAfter,
+            HostHeaderInjection::generateDuplicatedHostHeaderAfter,
             "Host: www.example.com\nHost: [PAYLOAD]"),
 
     DUPLICATE_BEFORE_HOST("Duplicate Host Header Before Host Header",
-            HostHeaderAttack::generateDuplicatedHostHeaderBefore,
+            HostHeaderInjection::generateDuplicatedHostHeaderBefore,
             "Host: [PAYLOAD]\nHost: www.example.com"),
 
     INDENTED_AFTER_HOST("Indented Host Header After Host Header",
-            HostHeaderAttack::generateIndentedHostHeaderAfter,
+            HostHeaderInjection::generateIndentedHostHeaderAfter,
             "Host: www.example.com\n\sHost: [PAYLOAD]"),
 
     INDENTED_BEFORE_HOST("Indented Host Header Before Host Header",
-            HostHeaderAttack::generateIndentedHostHeaderBefore,
+            HostHeaderInjection::generateIndentedHostHeaderBefore,
             "\sHost: [PAYLOAD]\nHost: www.example.com"),
 
     X_HOST("X-Host Header",
-            HostHeaderAttack::generateXHostHostHeader,
+            HostHeaderInjection::generateXHostHostHeader,
             "Host: www.example.com\nX-Host: [PAYLOAD]"),
 
     X_FORWARDED_SERVER("X-Forwarded-Server Header",
-            HostHeaderAttack::generateXForwardedServerHostHeader,
+            HostHeaderInjection::generateXForwardedServerHostHeader,
             "Host: www.example.com\nX-Forwarded-Server: [PAYLOAD]"),
 
     X_HTTP_HOST_OVERRIDE("X-HTTP-Host-Override Header",
-            HostHeaderAttack::generateXHTTPHostOverrideHostHeader,
+            HostHeaderInjection::generateXHTTPHostOverrideHostHeader,
             "Host: www.example.com\nX-HTTP-Host-Override: [PAYLOAD]"),
 
     FORWARDED("Forwarded Header",
-            HostHeaderAttack::generateForwardedHostHeader,
+            HostHeaderInjection::generateForwardedHostHeader,
             "Host: www.example.com\nForwarded: [PAYLOAD]"),
 
     PAYLOAD_IN_PORT_SECTION("Payload in The Port Section",
-            HostHeaderAttack::generatePayloadInPortHostHeader,
+            HostHeaderInjection::generatePayloadInPortHostHeader,
             "Host: www.example.com:[PAYLOAD]"),
 
     SUBDOMAIN("Subdomain",
-            HostHeaderAttack::generateSubdomainHostHeader,
+            HostHeaderInjection::generateSubdomainHostHeader,
             "Host: [PAYLOAD].example.com"),
 
     INJECTION_BEFORE_HOST("Injection Before Host",
-            HostHeaderAttack::generateInjectionBeforeHostHeader,
+            HostHeaderInjection::generateInjectionBeforeHostHeader,
             "Host: [PAYLOAD]-www.example.com"),
 
     INJECTION_AFTER_HOST("Injection After Host",
-            HostHeaderAttack::generateInjectionAfterHostHeader,
+            HostHeaderInjection::generateInjectionAfterHostHeader,
             "Host: www.example.com-[PAYLOAD]"),
 
     ABSOLUT_URL("Absolute URL",
-            HostHeaderAttack::generateAbsoluteUrl,
+            HostHeaderInjection::generateAbsoluteUrl,
             "GET https://[PAYLOAD]/ HTTP/1.1\nHost: www.example.com"),
 
     MALFORMED_REQUEST_LINE("Malformed Request Line",
-            HostHeaderAttack::generateMalformedRequestLine,
+            HostHeaderInjection::generateMalformedRequestLine,
             "GET @[PAYLOAD]/example HTTP/1.1\nHost: www.example.com\n");
 
     private final String name;
     private final BiFunction<String, List<String>, List<String>> patcher;
     private final String description;
 
-    HostHeaderAttack(
+    HostHeaderInjection(
             String name,
             BiFunction<String, List<String>, List<String>> patcher,
             String description) {

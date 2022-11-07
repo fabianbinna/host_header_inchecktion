@@ -2,7 +2,7 @@ package burp;
 
 import java.net.URL;
 
-public class HostHeaderScanIssue implements IScanIssue {
+public class HostHeaderInjectionScanIssue implements IScanIssue {
 
     private final IHttpService httpService;
     private final URL url;
@@ -11,7 +11,7 @@ public class HostHeaderScanIssue implements IScanIssue {
     private final String detail;
     private final String severity;
 
-    private HostHeaderScanIssue(
+    private HostHeaderInjectionScanIssue(
             IHttpService httpService,
             URL url,
             IHttpRequestResponse[] httpMessages,
@@ -26,11 +26,11 @@ public class HostHeaderScanIssue implements IScanIssue {
         this.severity = severity;
     }
 
-    public static HostHeaderScanIssue createDefaultIssue(
+    public static HostHeaderInjectionScanIssue createDefaultIssue(
             IHttpService httpService,
             URL url,
             IHttpRequestResponse[] httpMessages) {
-        return new HostHeaderScanIssue(
+        return new HostHeaderInjectionScanIssue(
                 httpService,
                 url,
                 httpMessages,
