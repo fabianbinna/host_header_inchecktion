@@ -36,7 +36,7 @@ public class ManualAttackMenu implements IContextMenuFactory {
         var buttonLocalhostPayload = new JMenuItem("Localhost payload");
         buttonLocalhostPayload.addActionListener(e -> SwingUtilities.invokeLater(() ->
                 this.executor.execute(() -> Arrays.stream(invocation.getSelectedMessages())
-                        .map(this.attacker::attackWithCollaborator)
+                        .map(this.attacker::attackWithLocalhost)
                         .flatMap(Collection::stream)
                         .forEach(this.callbacks::addScanIssue)))
         );

@@ -9,7 +9,9 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'net.portswigger.burp.extender:burp-extender-api:2.3'
+
 }
 
 test {

@@ -69,6 +69,17 @@ public enum Utils {
         });
     }
 
+    static List<String> addCacheControl(List<String> headers) {
+        var modifiedHeaders = new ArrayList<String>();
+        for (var header : headers) {
+            if (!header.startsWith("Cache-Control:")) {
+                modifiedHeaders.add(header);
+            }
+        }
+        modifiedHeaders.add("Cache-Control: no-cache");
+        return modifiedHeaders;
+    }
+
     static List<int[]> getMatches(byte[] response, byte[] match, IExtensionHelpers helpers) {
         List<int[]> matches = new ArrayList<>();
 
