@@ -1,6 +1,6 @@
 package burp;
 
-import java.io.PrintWriter;
+import org.apache.commons.text.similarity.JaroWinklerDistance;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Supplier;
@@ -13,11 +13,13 @@ final class HostHeaderInjectionAttacker {
     private final IBurpExtenderCallbacks callbacks;
     private final IExtensionHelpers helpers;
     private final IBurpCollaboratorClientContext collaboratorClientContext;
+    private final JaroWinklerDistance jaroWinklerDistance;
 
     HostHeaderInjectionAttacker(IBurpExtenderCallbacks callbacks) {
         this.callbacks = callbacks;
         this.helpers = callbacks.getHelpers();
         this.collaboratorClientContext = callbacks.createBurpCollaboratorClientContext();
+        this.jaroWinklerDistance = new JaroWinklerDistance();
     }
 
     List<IScanIssue> attackWithCollaborator(IHttpRequestResponse baseRequestResponse) {
@@ -31,18 +33,17 @@ final class HostHeaderInjectionAttacker {
     }
 
     List<IScanIssue> attackWithLocalhost(IHttpRequestResponse baseRequestResponse) {
-        var stdout = new PrintWriter(callbacks.getStdout(), true);
         return attackWithPayload(baseRequestResponse, () -> "localhost").stream()
                 .filter(executedAttack -> isStatusCode200(executedAttack.attackRequestResponse()))
-                .filter(executedAttack -> {
-
-                    int compare = Arrays.compare(
-                            executedAttack.originalRequestResponse().getResponse(),
-                            executedAttack.attackRequestResponse().getResponse());
-                    stdout.println("" + compare + ": " + this.helpers.analyzeRequest(executedAttack.originalRequestResponse().getResponse()).getUrl());
-                    return compare != 0;
-                })
+                .filter(this::areResponsesSimilar)
                 .map(this::generateAuthenticationBypassIssue)
+                .collect(Collectors.toList());
+    }
+
+    List<IScanIssue> attackWithCanary(IHttpRequestResponse baseRequestResponse) {
+        return attackWithPayload(baseRequestResponse, () -> String.valueOf(UUID.randomUUID())).stream()
+                .filter(this::isPayloadReflected)
+                .map(this::generateReflectionIssue)
                 .collect(Collectors.toList());
     }
 
@@ -53,7 +54,6 @@ final class HostHeaderInjectionAttacker {
         var request = originalRequestResponse.getRequest();
         var body = Arrays.copyOfRange(request, requestInfo.getBodyOffset(), request.length);
         var headers = requestInfo.getHeaders();
-
 
         List<ExecutedAttack> executedAttacks = new ArrayList<>();
         for(var attack : HostHeaderInjection.values()) {
@@ -80,6 +80,21 @@ final class HostHeaderInjectionAttacker {
         return this.helpers.analyzeResponse(baseRequestResponse.getResponse()).getStatusCode() / 100 == 2;
     }
 
+    private boolean areResponsesSimilar(ExecutedAttack executedAttack) {
+        double distance = this.jaroWinklerDistance.apply(
+                new StringBuffer(Arrays.toString(executedAttack.originalRequestResponse().getResponse())),
+                new StringBuffer(Arrays.toString(executedAttack.attackRequestResponse().getResponse())));
+        return 0.1 < distance && distance < 0.2;
+    }
+
+    private boolean isPayloadReflected(ExecutedAttack executedAttack) {
+        var response = this.helpers.analyzeResponse(executedAttack.attackRequestResponse().getResponse());
+        var matches = getMatches(executedAttack.attackRequestResponse().getResponse(),
+                executedAttack.payload().getBytes(StandardCharsets.UTF_8),
+                this.helpers);
+        return matches.size() > 0 && response.getStatusCode() / 100 == 2;
+    }
+
     private IScanIssue generateSSRFIssue(ExecutedAttack executedAttack) {
         var requestResponse = executedAttack.attackRequestResponse();
         var payload = executedAttack.payload();
@@ -103,6 +118,21 @@ final class HostHeaderInjectionAttacker {
                 requestResponse.getHttpService(),
                 this.helpers.analyzeRequest(requestResponse).getUrl(),
                 new IHttpRequestResponse[] { callbacks.applyMarkers(requestResponse, requestMatches, null) },
+                executedAttack.hostHeaderInjection());
+    }
+
+    private IScanIssue generateReflectionIssue(ExecutedAttack executedAttack) {
+        var requestResponse = executedAttack.attackRequestResponse();
+        var payload = executedAttack.payload();
+        var request = requestResponse.getRequest();
+        var response = requestResponse.getResponse();
+        var requestMatches = getMatches(request, payload.getBytes(StandardCharsets.UTF_8), this.helpers);
+        var responseMatches = getMatches(response, payload.getBytes(StandardCharsets.UTF_8), this.helpers);
+
+        return HostHeaderInjectionScanIssue.createReflectionIssue(
+                requestResponse.getHttpService(),
+                this.helpers.analyzeRequest(requestResponse).getUrl(),
+                new IHttpRequestResponse[] { callbacks.applyMarkers(requestResponse, requestMatches, responseMatches) },
                 executedAttack.hostHeaderInjection());
     }
 

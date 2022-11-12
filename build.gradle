@@ -9,9 +9,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'net.portswigger.burp.extender:burp-extender-api:2.3'
-
+    implementation 'org.apache.commons:commons-text:1.10.0'
 }
 
 test {
@@ -21,4 +20,10 @@ test {
 compileJava {
     targetCompatibility '17'
     sourceCompatibility '17'
+}
+
+task fatJar(type: Jar) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }

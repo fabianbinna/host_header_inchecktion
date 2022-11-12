@@ -13,35 +13,35 @@ enum HostHeaderInjection {
 
     DUPLICATE_AFTER_HOST("Duplicate Host Header After Host Header",
             HostHeaderInjection::generateDuplicatedHostHeaderAfter,
-            "Host: www.example.com\nHost: [PAYLOAD]"),
+            "Host: www.example.com<br/>Host: [PAYLOAD]"),
 
     DUPLICATE_BEFORE_HOST("Duplicate Host Header Before Host Header",
             HostHeaderInjection::generateDuplicatedHostHeaderBefore,
-            "Host: [PAYLOAD]\nHost: www.example.com"),
+            "Host: [PAYLOAD]<br/>Host: www.example.com"),
 
     INDENTED_AFTER_HOST("Indented Host Header After Host Header",
             HostHeaderInjection::generateIndentedHostHeaderAfter,
-            "Host: www.example.com\n\sHost: [PAYLOAD]"),
+            "Host: www.example.com<br/> Host: [PAYLOAD]"),
 
     INDENTED_BEFORE_HOST("Indented Host Header Before Host Header",
             HostHeaderInjection::generateIndentedHostHeaderBefore,
-            "\sHost: [PAYLOAD]\nHost: www.example.com"),
+            " Host: [PAYLOAD]<br/>Host: www.example.com"),
 
     X_HOST("X-Host Header",
             HostHeaderInjection::generateXHostHostHeader,
-            "Host: www.example.com\nX-Host: [PAYLOAD]"),
+            "Host: www.example.com<br/>X-Host: [PAYLOAD]"),
 
     X_FORWARDED_SERVER("X-Forwarded-Server Header",
             HostHeaderInjection::generateXForwardedServerHostHeader,
-            "Host: www.example.com\nX-Forwarded-Server: [PAYLOAD]"),
+            "Host: www.example.com<br/>X-Forwarded-Server: [PAYLOAD]"),
 
     X_HTTP_HOST_OVERRIDE("X-HTTP-Host-Override Header",
             HostHeaderInjection::generateXHTTPHostOverrideHostHeader,
-            "Host: www.example.com\nX-HTTP-Host-Override: [PAYLOAD]"),
+            "Host: www.example.com<br/>X-HTTP-Host-Override: [PAYLOAD]"),
 
     FORWARDED("Forwarded Header",
             HostHeaderInjection::generateForwardedHostHeader,
-            "Host: www.example.com\nForwarded: [PAYLOAD]"),
+            "Host: www.example.com<br/>Forwarded: [PAYLOAD]"),
 
     PAYLOAD_IN_PORT_SECTION("Payload in The Port Section",
             HostHeaderInjection::generatePayloadInPortHostHeader,
@@ -61,11 +61,11 @@ enum HostHeaderInjection {
 
     ABSOLUT_URL("Absolute URL",
             HostHeaderInjection::generateAbsoluteUrl,
-            "GET https://[PAYLOAD]/ HTTP/1.1\nHost: www.example.com"),
+            "GET https://[PAYLOAD]/ HTTP/1.1<br/>Host: www.example.com"),
 
     MALFORMED_REQUEST_LINE("Malformed Request Line",
             HostHeaderInjection::generateMalformedRequestLine,
-            "GET @[PAYLOAD]/example HTTP/1.1\nHost: www.example.com\n");
+            "GET @[PAYLOAD]/example HTTP/1.1<br/>Host: www.example.com");
 
     private final String name;
     private final BiFunction<String, List<String>, List<String>> patcher;

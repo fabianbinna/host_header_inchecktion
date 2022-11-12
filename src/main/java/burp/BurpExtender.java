@@ -10,7 +10,7 @@ public class BurpExtender implements IBurpExtender {
         var stdout = new PrintWriter(callbacks.getStdout(), true);
 
         var attacker = new HostHeaderInjectionAttacker(callbacks);
-        var scanner = new HostHeaderInjectionScanner(callbacks,  attacker);
+        var scanner = new HostHeaderInjectionScanner(attacker);
         callbacks.registerScannerCheck(scanner);
 
         var menu = new ManualAttackMenu(callbacks, attacker);

@@ -32,37 +32,6 @@ public class HostHeaderInjectionScanIssue implements IScanIssue {
         this.confidence = confidence;
     }
 
-    public static HostHeaderInjectionScanIssue createDefaultIssue(
-            IHttpService httpService,
-            URL url,
-            IHttpRequestResponse[] httpMessages) {
-        return new HostHeaderInjectionScanIssue(
-                httpService,
-                url,
-                httpMessages,
-                "Host Header Injection",
-                "The host header payload was probably reflected.",
-                null,
-                "Medium",
-                "Firm");
-    }
-
-    public static HostHeaderInjectionScanIssue createReflectedIssue(
-            IHttpService httpService,
-            URL url,
-            IHttpRequestResponse[] httpMessages,
-            HostHeaderInjection hostHeaderInjection) {
-        return new HostHeaderInjectionScanIssue(
-                httpService,
-                url,
-                httpMessages,
-                "Web Cache Poisoning via Host Header Injection: %s".formatted(hostHeaderInjection.title()),
-                "The host header payload was probably reflected.",
-                null,
-                "Medium",
-                "Tentative");
-    }
-
     public static HostHeaderInjectionScanIssue createSSRFIssue(
             IHttpService httpService,
             URL url,
@@ -77,7 +46,10 @@ public class HostHeaderInjectionScanIssue implements IScanIssue {
                         The injected host header triggered a server-side request that could be received by
                         the burp collaborator endpoint. It seems to be possible to force the server to connect
                         to an arbitrary host.
-                        """,
+                        <br/><br/>
+                        The payload was injected at the following position:<br/>
+                        %s
+                        """.formatted(hostHeaderInjection.description()),
                 """
                         Validate the host header properly. Check the host header against a whitelist. The simplest 
                         approach to remediate is to avoid using host header in server-side code.<br/>
@@ -106,7 +78,39 @@ public class HostHeaderInjectionScanIssue implements IScanIssue {
                         The payload "localhost" injected into the host header resulted in a response
                         with status code 200. The response body is different to the body of the original request.
                         It could be possible to access restricted functions that are only available from localhost.
+                        <br/><br/>
+                        The payload was injected at the following position:<br/>
+                        %s
+                        """.formatted(hostHeaderInjection.description()),
+                """
+                        Validate the host header properly. Check the host header against a whitelist. The simplest
+                        approach to remediate is to avoid using host header in server-side code.<br/>
+                        <br/>
+                        <b>Resources:</b>
+                        <ul>
+                        <li>https://portswigger.net/web-security/host-header#how-to-prevent-http-host-header-attacks</li>
+                        <li>https://portswigger.net/web-security/host-header/exploiting#exploiting-classic-server-side-vulnerabilities</li>
+                        </ul>
                         """,
+                "Low",
+                "Tentative");
+    }
+
+    public static HostHeaderInjectionScanIssue createReflectionIssue(
+            IHttpService httpService,
+            URL url,
+            IHttpRequestResponse[] httpMessages,
+            HostHeaderInjection hostHeaderInjection) {
+        return new HostHeaderInjectionScanIssue(
+                httpService,
+                url,
+                httpMessages,
+                "Web Cache Poisoning via Host Header Injection: %s".formatted(hostHeaderInjection.title()),
+                """
+                        The host header payload was reflected. This can lead to web cache poisoning.<br/><br/>
+                        The payload was injected at the following position:<br/>
+                        %s
+                        """.formatted(hostHeaderInjection.description()),
                 """
                         Validate the host header properly. Check the host header against a whitelist. The simplest
                         approach to remediate is to avoid using host header in server-side code.<br/>
