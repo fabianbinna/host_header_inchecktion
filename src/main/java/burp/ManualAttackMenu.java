@@ -43,7 +43,7 @@ public class ManualAttackMenu implements IContextMenuFactory {
         menuItems.add(buttonLocalhostPayload);
 
         var buttonCanaryPayload = new JMenuItem("Canary payload");
-        buttonLocalhostPayload.addActionListener(e -> SwingUtilities.invokeLater(() ->
+        buttonCanaryPayload.addActionListener(e -> SwingUtilities.invokeLater(() ->
                 this.executor.execute(() -> Arrays.stream(invocation.getSelectedMessages())
                         .map(this.attacker::attackWithCanary)
                         .flatMap(Collection::stream)
