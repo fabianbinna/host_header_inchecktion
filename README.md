@@ -28,8 +28,8 @@ Run an active scan or manually select a request to check:
 
 ## Build
 
-Linux: `./gradlew clean build fatJar -x test`
+Linux: `./gradlew clean build fatJar`
 
-Windows: `.\gradlew.bat clean build fatJar -x test`
+Windows: `.\gradlew.bat clean build fatJar`
 
 Get the jar from `build/libs/host_header_inchecktion-<version>.jar`
