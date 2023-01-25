@@ -77,10 +77,20 @@ final class HostHeaderInjectionAttacker {
     }
 
     private boolean isStatusCode200(IHttpRequestResponse baseRequestResponse) {
-        return this.helpers.analyzeResponse(baseRequestResponse.getResponse()).getStatusCode() / 100 == 2;
+        var response = baseRequestResponse.getResponse();
+        if(response == null) {
+            return false;
+        }
+        return this.helpers.analyzeResponse(response).getStatusCode() / 100 == 2;
     }
 
     private boolean areResponsesSimilar(ExecutedAttack executedAttack) {
+        var originalResponse = executedAttack.originalRequestResponse().getResponse();
+        var attackResponse = executedAttack.attackRequestResponse().getResponse();
+        if(originalResponse == null || attackResponse == null) {
+            return false;
+        }
+
         double distance = this.jaroWinklerDistance.apply(
                 new StringBuffer(Arrays.toString(executedAttack.originalRequestResponse().getResponse())),
                 new StringBuffer(Arrays.toString(executedAttack.attackRequestResponse().getResponse())));
@@ -88,9 +98,13 @@ final class HostHeaderInjectionAttacker {
     }
 
     private boolean isPayloadReflected(ExecutedAttack executedAttack) {
-        var response = this.helpers.analyzeResponse(executedAttack.attackRequestResponse().getResponse());
-        var matches = getMatches(executedAttack.attackRequestResponse().getResponse(),
-                executedAttack.payload().getBytes(StandardCharsets.UTF_8),
+        var rawResponse = executedAttack.attackRequestResponse().getResponse();
+        if(rawResponse == null) {
+            return false;
+        }
+
+        var response = this.helpers.analyzeResponse(rawResponse);
+        var matches = getMatches(rawResponse, executedAttack.payload().getBytes(StandardCharsets.UTF_8),
                 this.helpers);
         return matches.size() > 0 && response.getStatusCode() / 100 == 2;
     }
