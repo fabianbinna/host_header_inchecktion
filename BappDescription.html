@@ -1,0 +1,19 @@
+<p>This burp extension helps to find host header injection vulnerabilities by actively testing a set of injection types. A scan issue is created if an injection was successful.</p>
+
+<p>Features</p>
+<ul>
+	<li>Active Scanner</li>
+	<li>Manually select a request to check multiple types of host header injections.</li>
+	<li>Collaborator payload: Inject a collaborator string to check for server-side request forgery.</li>
+	<li>Localhost payload: Inject the string "localhost" to check for restricted feature bypass.</li>
+	<li>Canary payload (only manual): Inject a canary to check for host header reflection which can lead to cache poisoning.</li>
+</ul>
+
+<p>Usage</p>
+<p>Run an active scan or manually select a request to check:</p>
+<ol>
+	<li>Go to the HTTP History.</li>
+	<li>Right-click on the request you want to check.</li>
+	<li>Extension -&gt; Host Header Inchecktion -&gt; payload type</li>
+	<li>In case of a successful injection a scan issue is generated</li>
+</ol>
