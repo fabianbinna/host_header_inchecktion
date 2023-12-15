@@ -31,6 +31,10 @@ enum HostHeaderInjection {
             HostHeaderInjection::generateXHostHostHeader,
             "Host: www.example.com<br/>X-Host: [PAYLOAD]"),
 
+    X_FORWARDED_HOST("X-Forwarded-Host Header",
+        HostHeaderInjection::generateXForwardedHostHostHeader,
+        "Host: www.example.com<br/>X-Forwarded-Host: [PAYLOAD]"),
+
     X_FORWARDED_SERVER("X-Forwarded-Server Header",
             HostHeaderInjection::generateXForwardedServerHostHeader,
             "Host: www.example.com<br/>X-Forwarded-Server: [PAYLOAD]"),
@@ -114,6 +118,10 @@ enum HostHeaderInjection {
 
     private static List<String> generateXHostHostHeader(String payload, List<String> headers) {
         return addHeaderAfterHostHeader(headers, "X-Host: " + payload);
+    }
+
+    private static List<String> generateXForwardedHostHostHeader(String payload, List<String> headers) {
+        return addHeaderAfterHostHeader(headers, "X-Forwarded-Host: " + payload);
     }
 
     private static List<String> generateXForwardedServerHostHeader(String payload, List<String> headers) {
