@@ -1,10 +1,12 @@
 package burp;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public enum Utils {
     ;
@@ -94,6 +96,12 @@ public enum Utils {
         }
 
         return matches;
+    }
+
+    static String removeHeader(String httpMessage) {
+        return Arrays.stream(httpMessage.split("\r\n\r\n"))
+            .skip(1)
+            .collect(Collectors.joining("\r\n\r\n"));
     }
 
 }

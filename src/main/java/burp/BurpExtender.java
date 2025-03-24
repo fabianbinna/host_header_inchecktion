@@ -16,7 +16,7 @@ public class BurpExtender implements IBurpExtender {
         var menu = new ManualAttackMenu(callbacks, attacker);
         callbacks.registerContextMenuFactory(menu);
 
-        stdout.println("Host Header Inchecktion v1.2.2 loaded.");
+        stdout.println("Host Header Inchecktion v1.2.3 loaded.");
     }
 
 }

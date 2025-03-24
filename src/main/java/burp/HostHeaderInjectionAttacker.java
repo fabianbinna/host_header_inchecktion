@@ -91,10 +91,14 @@ final class HostHeaderInjectionAttacker {
             return false;
         }
 
+        var originalResponseString = new String(originalResponse, StandardCharsets.UTF_8);
+        var attackResponseString = new String(attackResponse, StandardCharsets.UTF_8);
+
         double distance = this.jaroWinklerDistance.apply(
-                new StringBuffer(Arrays.toString(executedAttack.originalRequestResponse().getResponse())),
-                new StringBuffer(Arrays.toString(executedAttack.attackRequestResponse().getResponse())));
-        return 0.1 < distance && distance < 0.2;
+            removeHeader(originalResponseString),
+            removeHeader(attackResponseString));
+
+        return 0.05 < distance && distance < 0.1;
     }
 
     private boolean isPayloadReflected(ExecutedAttack executedAttack) {
