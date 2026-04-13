@@ -18,9 +18,8 @@ public class HostHeaderInjectionScanner implements  IScannerCheck {
     public List<IScanIssue> doActiveScan(
             IHttpRequestResponse baseRequestResponse,
             IScannerInsertionPoint insertionPoint) {
-        List<IScanIssue> issues = new ArrayList<>();
-        issues.addAll(this.attacker.attackWithCollaborator(baseRequestResponse));
-        issues.addAll(this.attacker.attackWithLocalhost(baseRequestResponse));
+        List<IScanIssue> issues = new ArrayList<>(this.attacker.attackWithCollaborator(baseRequestResponse));
+        this.attacker.attackWithLocalhost(baseRequestResponse);
         return issues;
     }
 

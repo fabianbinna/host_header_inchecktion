@@ -51,38 +51,6 @@ public class HostHeaderInjectionScanIssue implements IScanIssue {
                         %s
                         """.formatted(hostHeaderInjection.description()),
                 """
-                        Validate the host header properly. Check the host header against a whitelist. The simplest 
-                        approach to remediate is to avoid using host header in server-side code.<br/>
-                        <br/>
-                        <b>Resources:</b>
-                        <ul>
-                        <li>https://portswigger.net/web-security/host-header#how-to-prevent-http-host-header-attacks</li>
-                        <li>https://portswigger.net/web-security/host-header/exploiting#exploiting-classic-server-side-vulnerabilities</li>
-                        </ul>
-                        """,
-                "Medium",
-                "Certain");
-    }
-
-    public static HostHeaderInjectionScanIssue createAuthenticationBypassIssue(
-            IHttpService httpService,
-            URL url,
-            IHttpRequestResponse[] httpMessages,
-            HostHeaderInjection hostHeaderInjection) {
-        return new HostHeaderInjectionScanIssue(
-                httpService,
-                url,
-                httpMessages,
-                "Authentication Bypass via Host Header Injection: %s".formatted(hostHeaderInjection.title()),
-                """
-                        The payload "localhost" injected into the host header resulted in a response
-                        with status code 200. The response body is different to the body of the original request.
-                        It could be possible to access restricted functions that are only available from localhost.
-                        <br/><br/>
-                        The payload was injected at the following position:<br/>
-                        %s
-                        """.formatted(hostHeaderInjection.description()),
-                """
                         Validate the host header properly. Check the host header against a whitelist. The simplest
                         approach to remediate is to avoid using host header in server-side code.<br/>
                         <br/>
@@ -91,9 +59,9 @@ public class HostHeaderInjectionScanIssue implements IScanIssue {
                         <li>https://portswigger.net/web-security/host-header#how-to-prevent-http-host-header-attacks</li>
                         <li>https://portswigger.net/web-security/host-header/exploiting#exploiting-classic-server-side-vulnerabilities</li>
                         </ul>
-                        """,
-                "Low",
-                "Tentative");
+                       \s""",
+                "Medium",
+                "Certain");
     }
 
     public static HostHeaderInjectionScanIssue createReflectionIssue(

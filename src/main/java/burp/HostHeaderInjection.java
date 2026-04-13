@@ -5,7 +5,7 @@ import java.util.function.BiFunction;
 
 import static burp.Utils.*;
 
-enum HostHeaderInjection {
+public enum HostHeaderInjection {
 
     ARBITRARY("Arbitrary Host Header",
         HostHeaderInjection::generateArbitraryHostHeader,

@@ -17,13 +17,13 @@ Run an active scan or manually select a request to check:
 
 1. Go to the HTTP history.
 2. Right-click on the request you want to check.
-3. Extension -> Host Header Inchecktion -> payload type
+3. Extension → Host Header Inchecktion → payload type
 4. In case of a successful injection a scan issue is generated.
 
 ## Installation
 
 1. Download the pre-built jar from the releases page.
-2. Extender -> Add -> Extension Details -> Select file ...
+2. Extender → Add → Extension Details → Select file ...
 3. Select the downloaded jar.
 
 ## Build
